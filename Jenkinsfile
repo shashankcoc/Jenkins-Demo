@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     // Stop and remove existing container if running
-                    sh "docker rm -f ${IMAGE_NAME} || true"
+                    // sh "docker rm -f ${IMAGE_NAME} || true"
 
                     // Run new container
                     dockerImage.run("-d -p 3000:3000 --name ${IMAGE_NAME}")
