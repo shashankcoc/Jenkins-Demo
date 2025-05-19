@@ -98,6 +98,7 @@ pipeline {
                 docker push %DOCKERHUB_IMAGE%
             """
         }
+        }
 
         stage('Logout Docker Hub') {
             steps {
