@@ -70,13 +70,17 @@ pipeline {
             }
         }
 
-        stage('Login to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    bat 'echo %PASSWORD% | docker login -u %USERNAME% --password-stdin'
-                }
-            }
+       stage('Login to Docker Hub') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            bat """
+                echo %PASSWORD% > token.txt
+                docker login -u %USERNAME% --password-stdin < token.txt
+            """
         }
+    }
+}
+
 
         stage('Push Docker Image') {
             steps {
