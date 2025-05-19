@@ -83,15 +83,21 @@ pipeline {
 }
 
 
-     stage('Push Docker Image') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            bat """
+//      stage('Push Docker Image') {
+//     steps {
+//         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+//             bat """
+//                 docker push %DOCKERHUB_IMAGE%
+//             """
+//         }
+//     }
+// }
+        stage('Push image') {
+        withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
+        bat """
                 docker push %DOCKERHUB_IMAGE%
             """
         }
-    }
-}
 
         stage('Logout Docker Hub') {
             steps {
