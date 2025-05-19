@@ -70,34 +70,14 @@ pipeline {
             }
         }
 
-       stage('Login to Docker Hub') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            bat '''
-                echo %PASSWORD% > docker-pass.txt
-                docker login -u %USERNAME% --password-stdin < docker-pass.txt
-                del docker-pass.txt
-            '''
-        }
-    }
-}
-
-
-//      stage('Push Docker Image') {
-//     steps {
-//         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-//             bat """
-//                 docker push %DOCKERHUB_IMAGE%
-//             """
-//         }
-//     }
-// }
-        stage('Push image') {
-        withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
-        bat """
-                docker push %DOCKERHUB_IMAGE%
-            """
-        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-hub-credentials', url: '') {
+                        bat "docker push %DOCKERHUB_IMAGE%"
+                    }
+                }
+            }
         }
 
         stage('Logout Docker Hub') {
@@ -115,4 +95,5 @@ pipeline {
         }
     }
 }
+
 
