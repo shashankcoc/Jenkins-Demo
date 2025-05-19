@@ -83,12 +83,15 @@ pipeline {
 }
 
 
-
-        stage('Push Docker Image') {
-            steps {
-                bat "docker push %DOCKERHUB_IMAGE%"
-            }
+stage('Push Docker Image') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+            bat """
+                docker push %DOCKERHUB_IMAGE%
+            """
         }
+    }
+}
 
         stage('Logout Docker Hub') {
             steps {
